@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <script data-require="jquery@*" data-semver="2.1.1" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script data-require="bootstrap@3.1.1" data-semver="3.1.1" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link data-require="bootstrap-css@3.1.1" data-semver="3.1.1" rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <style>
+        .carousel-container {
+            width: 800px;
+            margin: 0px 300px;
+        }
+        
+        .carousel-caption {
+            color: black;
+        }
+        
+        .glyphicon-chevron-right,
+        .glyphicon-chevron-left {
+            color: black;
+        }
+    </style>
+    <title>Ajax APi call with slider</title>
+</head>
+
+<body>
+    <h1 class="text-center">Carousel - Ajax Load</h1>
+    <div class="carousel-container text-center">
+        <div id="myCarousel" class="carousel slide">
+            <ol class="carousel-indicators" id="indicators">
+            </ol>
+            <div class="carousel-inner" id="homepageItems">
+            </div>
+            <div class="carousel-controls">
+                <a class="carousel-control left" href="#myCarousel" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="carousel-control right" href="#myCarousel" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mockjax/1.5.3/jquery.mockjax.js"></script>
+    <script src="mockresponse.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: '/carousel',
+                dataType: 'json',
+                success: function(data) {
+                    var response = '',
+                        indicator = '';
+                    for (var i = 0; i < data.results.length; i++) {
+                        response += '<div class="item text-center"><img class="img-fluid" src="' + data.results[i].Image_URL + '"><div class="carousel-caption"><h3>' + data.results[i].Title + '</h3></div></div>';
+                        indicator += '<li data-target="#myCarousel" data-slide-to="' + i + '"></li>';
+                    }
+                    $('#homepageItems').append(response);
+                    $('#indicators').append(indicator);
+                    $('.item').first().addClass('active');
+                    $('.carousel-indicators > li').first().addClass('active');
+                    $("#myCarousel").carousel();
+                },
+                error: function(xhr, status, error) {
+                    console.log(`Error : ${error}, ${status}`);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
